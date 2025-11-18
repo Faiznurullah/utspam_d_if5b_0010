@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../presentation/login_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -145,8 +146,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     curve: Curves.easeInOut,
                                   );
                                 } else {
-                                  // Navigate to home or login
-                                  // Navigator.pushReplacement(context, ...);
+                                   Navigator.pushReplacement(context, MaterialPageRoute(
+                                    builder: (context) =>  LoginPage(),
+                                  ),);
                                 }
                               },
                               style: ElevatedButton.styleFrom(
