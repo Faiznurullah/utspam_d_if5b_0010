@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 48),
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'Username',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -86,6 +87,21 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => RegisterPage(),
+                      ));
+                    },
+                    child: Text(
+                      'Create New Account',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
