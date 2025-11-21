@@ -3,15 +3,14 @@ import '../model/user.dart';
 
 class UserRepository {
   static const String tableName = 'users';
-  final DbHelper _dbHelper = DbHelper.instance;
-
-  // Insert user baru (registrasi)
+  final DbHelper _dbHelper = DbHelper.instance; 
   Future<int> insertUser(User user) async {
     final db = await _dbHelper.database;
     return await db.insert(tableName, user.toMapForInsert());
-  }
+  } 
 
-  // Get user berdasarkan username dan password (login)
+
+  
   Future<User?> getUserByCredentials(String username, String password) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(

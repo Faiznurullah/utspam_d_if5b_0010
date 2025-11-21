@@ -24,15 +24,14 @@ class DbHelper{
         final path = join(dbPath, dbName);
         return await openDatabase(
           path,
-          version: 9, // Incremented version to trigger upgrade
+          version: 9, 
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
         ); 
       
     }
 
-    Future _onCreate(Database db, int version) async{
-        // Buat tabel users
+    Future _onCreate(Database db, int version) async{ 
         await db.execute('''
           CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -131,14 +130,13 @@ class DbHelper{
       }
     }
 
-    // Method untuk clear semua data (untuk testing)
+    
     Future<void> clearDatabase() async {
       final db = await database;
       await db.execute('DELETE FROM users');
       await db.execute('DELETE FROM transactions');
     }
-
-    // Method untuk delete database file (force recreate)
+ 
     Future<void> deleteDatabase() async {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, dbName);

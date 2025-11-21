@@ -3,7 +3,7 @@ import 'dart:convert';
 class Transaction {
   final int? id;
   final String transactionId;
-  final int userId; // Foreign key to users table
+  final int userId;  
   final String buyerName;
   final int drugId;
   final String drugName;
@@ -11,7 +11,7 @@ class Transaction {
   final double drugPrice;
   final int quantity;
   final double totalCost;
-  final String purchaseMethod; // 'langsung' or 'resep_dokter'
+  final String purchaseMethod;  
   final String? prescriptionNumber;
   final String? prescriptionImagePath;
   final String? additionalNotes;
@@ -40,8 +40,7 @@ class Transaction {
     this.createdAt,
     this.updatedAt,
   });
-
-  // Factory constructor untuk membuat instance dari Map (database)
+ 
   factory Transaction.fromMap(Map<String, dynamic> map) {
     return Transaction(
       id: map['id'],

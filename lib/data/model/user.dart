@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// class users untuk menyimpan data user
 class User {
   final int? id;
   final String fullname;
@@ -19,7 +20,7 @@ class User {
     this.address,
   });
 
-  // Factory constructor untuk membuat instance dari Map (database)
+   
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'],
@@ -32,7 +33,7 @@ class User {
     );
   }
 
-  // Convert instance ke Map untuk database
+  
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -45,7 +46,7 @@ class User {
     };
   }
 
-  // Convert ke Map tanpa field yang auto-generated untuk insert
+  
   Map<String, dynamic> toMapForInsert() {
     final map = toMap();
     map.remove('id');

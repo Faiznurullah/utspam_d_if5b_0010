@@ -386,14 +386,12 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
       final dbHelper = DbHelper.instance;
       final tables = await dbHelper.getTableNames();
       final transactionTableExists = await dbHelper.verifyTransactionsTable();
-      print('Available tables before transaction: $tables');
-      print('Transactions table verified: $transactionTableExists');
       
       if (!transactionTableExists) {
-        print('Transactions table not found, forcing recreation...');
+       
         await dbHelper.deleteDatabase();
         final newTables = await dbHelper.getTableNames(); // This will recreate the database
-        print('Tables after recreation: $newTables');
+        
       }
       
       final transactionId = _transactionRepository.generateTransactionId();
@@ -422,8 +420,7 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
 
       await _transactionRepository.insertTransaction(transaction);
 
-      // log result
-      print('Transaction saved: $transaction');
+     
       
       if (mounted) {
         _showSnackBar('Transaksi berhasil disimpan!');
