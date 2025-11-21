@@ -24,7 +24,7 @@ class DbHelper{
         final path = join(dbPath, dbName);
         return await openDatabase(
           path,
-          version:3,
+          version:4,
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
         ); 
@@ -39,7 +39,8 @@ class DbHelper{
             username VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
-            phone VARCHAR(20) NOT NULL
+            phone VARCHAR(20) NOT NULL,
+            address TEXT
           );
 
           CREATE TABLE transactions(
@@ -65,7 +66,7 @@ class DbHelper{
     }
 
     Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-      if (oldVersion < 3) { 
+      if (oldVersion < 4) { 
         await db.execute('DROP TABLE IF EXISTS users');
         await db.execute('DROP TABLE IF EXISTS transactions');
         await _onCreate(db, newVersion);
