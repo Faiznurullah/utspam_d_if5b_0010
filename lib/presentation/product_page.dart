@@ -50,6 +50,8 @@ class ProductPage extends StatelessWidget {
                     type: product.description,
                     price: 'Rp ${product.price.toInt().toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}',
                     image: product.imageUrl,
+                     product: product,
+                      context: context,
                   );
                 },
               ),

@@ -445,28 +445,11 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Formulir Pembelian Obat'),
-        backgroundColor: Colors.blue[600],
-        foregroundColor: Colors.white,
+        title: const Text('Formulir Pembelian Obat'), 
         elevation: 0,
         actions: [
-          // Debug button untuk check tables
-          IconButton(
-            icon: const Icon(Icons.bug_report),
-            onPressed: () async {
-              final dbHelper = DbHelper.instance;
-              try {
-                final tables = await dbHelper.getTableNames();
-                final transactionTableExists = await dbHelper.verifyTransactionsTable();
-                print('Available tables: $tables');
-                print('Transactions table exists: $transactionTableExists');
-                _showSnackBar('Tables: ${tables.join(', ')}. Transactions: $transactionTableExists');
-              } catch (e) {
-                _showSnackBar('Database error: $e', isError: true);
-              }
-            },
-          ),
-          // Reset database button
+           
+        
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () async {
@@ -480,53 +463,12 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
               }
             },
           ),
-          // Force delete database button  
-          IconButton(
-            icon: const Icon(Icons.delete_forever),
-            onPressed: () async {
-              // Show confirmation dialog
-              bool? confirm = await showDialog<bool>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Reset Database'),
-                    content: const Text('Hapus database dan buat ulang? Ini akan mengatasi error table.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('Batal'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: const Text('Reset'),
-                      ),
-                    ],
-                  );
-                },
-              );
-              
-              if (confirm == true) {
-                final dbHelper = DbHelper.instance;
-                try {
-                  await dbHelper.deleteDatabase();
-                  final tables = await dbHelper.getTableNames();
-                  _showSnackBar('Database reset berhasil! Tables: ${tables.join(', ')}');
-                } catch (e) {
-                  _showSnackBar('Failed to reset: $e', isError: true);
-                }
-              }
-            },
-          ),
+          
+        
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.blue[50]!, Colors.white],
-          ),
-        ),
+       
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Form(
