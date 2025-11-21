@@ -177,9 +177,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Transaksi'),
-        backgroundColor: Colors.blue[600],
-        foregroundColor: Colors.white,
+        title: const Text('Edit Transaksi'), 
         elevation: 0,
         actions: [
           TextButton(
@@ -187,8 +185,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
               Navigator.pop(context); // Cancel and go back
             },
             child: const Text(
-              'Batal',
-              style: TextStyle(color: Colors.white),
+              'Batal', 
             ),
           ),
         ],

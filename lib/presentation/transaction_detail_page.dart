@@ -104,8 +104,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
       ),
     );
 
-    if (result == true) {
-      // Refresh transaction data
+    if (result == true) { 
       try {
         final updatedTransaction = await _transactionRepository.getTransactionByTransactionId(_currentTransaction.transactionId);
         if (updatedTransaction != null) {
@@ -127,14 +126,8 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Detail Transaksi',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Colors.blue[600],
-        iconTheme: const IconThemeData(color: Colors.white),
+          'Detail Transaksi', 
+        ), 
         elevation: 0,
       ),
       body: _isLoading

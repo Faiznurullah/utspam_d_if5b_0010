@@ -199,58 +199,61 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          transaction.transactionId,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                      ),
-                      // Status indicator
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: (transaction.status?.toLowerCase() == 'dibatalkan')
-                              ? Colors.red[100]
-                              : Colors.green[100],
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          (transaction.status?.toLowerCase() == 'dibatalkan')
-                              ? 'Dibatalkan'
-                              : 'Selesai',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: (transaction.status?.toLowerCase() == 'dibatalkan')
-                                ? Colors.red[700]
-                                : Colors.green[700],
-                          ),
-                        ),
-                      ),
+                     
+                     
                       Row(
                         children: [
-                          Text(
-                            transaction.formattedPurchaseDate,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[100],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              transaction.transactionId,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[700],
+                              ),
                             ),
                           ),
+                          // Status indicator
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: (transaction.status?.toLowerCase() == 'dibatalkan')
+                                  ? Colors.red[100]
+                                  : Colors.green[100],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              (transaction.status?.toLowerCase() == 'dibatalkan')
+                                  ? 'Dibatalkan'
+                                  : 'Selesai',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: (transaction.status?.toLowerCase() == 'dibatalkan')
+                                    ? Colors.red[700]
+                                    : Colors.green[700],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    
+                    
+                      Row(
+                        children: [
+                         
                           const SizedBox(width: 8),
                           GestureDetector(
                             onTap: () async {
@@ -328,9 +331,23 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                           ),
                         ],
                       ),
+
+                      
                     ],
                   ),
+
+
                   const SizedBox(height: 12),
+
+                   Text(
+                            transaction.formattedPurchaseDate,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+
+                        const SizedBox(height: 12),
                   
                   // Data Obat
                   Container(
