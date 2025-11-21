@@ -224,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const TransactionHistoryPage(),
+                          builder: (context) => TransactionHistoryPage(currentUser: _currentUser),
                         ),
                       );
                     },

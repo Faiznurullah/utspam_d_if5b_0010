@@ -53,6 +53,39 @@ class TransactionRepository {
     }
   }
 
+  // Get transaksi berdasarkan user ID
+  Future<List<Transaction>> getTransactionsByUserId(int userId) async {
+    try {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'purchase_date DESC',
+      );
+      return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
+    } catch (e) {
+      throw Exception('Failed to get transactions by user ID: $e');
+    }
+  }
+
+  // Get recent transactions untuk user tertentu
+  Future<List<Transaction>> getRecentTransactionsByUserId(int userId, {int limit = 3}) async {
+    try {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'purchase_date DESC',
+        limit: limit,
+      );
+      return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
+    } catch (e) {
+      throw Exception('Failed to get recent transactions by user ID: $e');
+    }
+  }
+
   // Get semua transaksi
   Future<List<Transaction>> getAllTransactions() async {
     try {

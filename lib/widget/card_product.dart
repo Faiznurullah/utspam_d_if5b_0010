@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/model/product.dart';
+import '../data/model/user.dart';
 import '../presentation/transaction_add_page.dart';
 
 Widget productCard({
@@ -8,6 +9,7 @@ Widget productCard({
   required String price,
   required String image,
   Product? product,
+  User? currentUser,
   BuildContext? context,
 }) {
   return GestureDetector(
@@ -16,7 +18,10 @@ Widget productCard({
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TransactionAddPage(selectedProduct: product),
+            builder: (context) => TransactionAddPage(
+              selectedProduct: product,
+              currentUser: currentUser,
+            ),
           ),
         );
       }

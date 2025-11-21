@@ -24,7 +24,7 @@ class DbHelper{
         final path = join(dbPath, dbName);
         return await openDatabase(
           path,
-          version: 8, // Incremented version to trigger upgrade
+          version: 9, // Incremented version to trigger upgrade
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
         ); 
@@ -50,6 +50,7 @@ class DbHelper{
           CREATE TABLE transactions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             transaction_id VARCHAR(50) UNIQUE NOT NULL,
+            user_id INTEGER NOT NULL,
             buyer_name VARCHAR(255) NOT NULL,
             drug_id INTEGER NOT NULL,
             drug_name VARCHAR(255) NOT NULL,
@@ -64,7 +65,8 @@ class DbHelper{
             status VARCHAR(20) NOT NULL DEFAULT 'selesai',
             purchase_date DATETIME NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
           )
         ''');
         

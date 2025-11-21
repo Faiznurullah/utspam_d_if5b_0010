@@ -36,11 +36,21 @@ class _HomePageState extends State<HomePage> {
     });
 
     try {
-      final allTransactions = await _transactionRepository.getAllTransactions();
-      setState(() {
-        _recentTransactions = allTransactions.take(3).toList();
-        _isLoadingTransactions = false;
-      });
+      if (widget.currentUser != null) {
+        final userTransactions = await _transactionRepository.getRecentTransactionsByUserId(
+          widget.currentUser!.id!,
+          limit: 3,
+        );
+        setState(() {
+          _recentTransactions = userTransactions;
+          _isLoadingTransactions = false;
+        });
+      } else {
+        setState(() {
+          _recentTransactions = [];
+          _isLoadingTransactions = false;
+        });
+      }
     } catch (e) {
       setState(() {
         _isLoadingTransactions = false;
@@ -162,6 +172,7 @@ class _HomePageState extends State<HomePage> {
                           price: '\Rp.${product.price.toStringAsFixed(2)}',
                           image: product.imageUrl,
                           product: product,
+                          currentUser: widget.currentUser,
                           context: context,
                         ),
                     ],
@@ -181,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const TransactionHistoryPage()),
+                        MaterialPageRoute(builder: (context) => TransactionHistoryPage(currentUser: widget.currentUser)),
                       );
                     },
                     child: Text(
