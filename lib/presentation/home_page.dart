@@ -6,11 +6,14 @@ import 'transaction_detail_page.dart';
 import 'product_page.dart';
 import '../data/model/product.dart';
 import '../data/model/transaction.dart';
+import '../data/model/user.dart';
 import '../data/repository/transaction.dart';
 import '../widget/card_product.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User? currentUser;
+  
+  const HomePage({super.key, this.currentUser});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -64,13 +67,13 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) =>  ProfilePage()),
+                              MaterialPageRoute(builder: (context) => ProfilePage(currentUser: widget.currentUser)),
                             );
                           },
                         ),
                         SizedBox(width: 10),
                         Text(
-                          'John Doe',
+                          '${widget.currentUser?.fullname ?? ''}',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
