@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'profile_page.dart';
+import 'transaction_history_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -139,9 +140,17 @@ class _HomePageState extends State<HomePage> {
                     'Transaction History',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'See All',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TransactionHistoryPage()),
+                      );
+                    },
+                    child: Text(
+                      'See All',
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                    ),
                   ),
                 ],
               ),

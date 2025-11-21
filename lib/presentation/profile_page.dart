@@ -92,7 +92,7 @@ class ProfilePage extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            "Registered Since Dec 202X",
+                            "+62676262382",
                             style: TextStyle(color: Colors.white70),
                           ),
                         ],
