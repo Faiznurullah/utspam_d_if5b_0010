@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'screens/splash.dart';
+import 'data/db/db_helper.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DbHelper().database;
   runApp(const MyApp());
 }
 

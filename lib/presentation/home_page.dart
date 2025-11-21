@@ -15,31 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-
-  List<Product> products = [
-    Product(
-      id: 1,
-      name: "Vitamin C",
-      description: "Boosts immune system",
-      price: 15.99,
-      imageUrl: "assets/images/medicine1.png",
-    ),
-    Product(
-      id: 2,
-      name: "Bodrex Herbal",
-      description: "Relieves headaches",
-      price: 7.99,
-      imageUrl: "assets/images/medicine2.png",
-    ),
-    Product(
-      id: 3,
-      name: "Konidin",
-      description: "Cough relief",
-      price: 5.99,
-      imageUrl: "assets/images/medicine3.png",
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

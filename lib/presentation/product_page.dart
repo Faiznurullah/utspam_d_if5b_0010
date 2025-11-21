@@ -6,30 +6,7 @@ class ProductPage extends StatelessWidget {
   const ProductPage({super.key});
 
   // Data dummy produk obat-obatan
-  List<Product> get dummyProducts => [
-    Product(
-      id: 1,
-      name: "Vitamin C",
-      description: "Boosts immune system",
-      price: 15.99,
-      imageUrl: "assets/images/medicine1.png",
-    ),
-    Product(
-      id: 2,
-      name: "Bodrex Herbal",
-      description: "Relieves headaches",
-      price: 7.99,
-      imageUrl: "assets/images/medicine2.png",
-    ),
-    Product(
-      id: 3,
-      name: "Konidin",
-      description: "Cough relief",
-      price: 5.99,
-      imageUrl: "assets/images/medicine3.png",
-    ),
-  ];
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +24,7 @@ class ProductPage extends StatelessWidget {
                
               const SizedBox(height: 4),
               Text(
-                '${dummyProducts.length} products available.',
+                '${products.length} products available.',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -65,9 +42,9 @@ class ProductPage extends StatelessWidget {
                   mainAxisSpacing: 12,
                   childAspectRatio: 0.75,
                 ),
-                itemCount: dummyProducts.length,
+                itemCount: products.length,
                 itemBuilder: (context, index) {
-                  final product = dummyProducts[index];
+                  final product = products[index];
                   return productCard(
                     name: product.name,
                     type: product.description,
