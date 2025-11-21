@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/repository/transaction.dart';
 import '../data/model/transaction.dart';
+import 'transaction_edit_page.dart';
 
 class TransactionHistoryPage extends StatefulWidget {
   const TransactionHistoryPage({super.key});
@@ -215,12 +216,46 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                           ),
                         ),
                       ),
-                      Text(
-                        transaction.formattedPurchaseDate,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            transaction.formattedPurchaseDate,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TransactionEditPage(
+                                    transaction: transaction,
+                                  ),
+                                ),
+                              );
+                              
+                              // Refresh data jika ada perubahan
+                              if (result == true) {
+                                _refreshTransactions();
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.green[100],
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Icon(
+                                Icons.edit,
+                                size: 16,
+                                color: Colors.green[700],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
