@@ -24,7 +24,7 @@ class DbHelper{
         final path = join(dbPath, dbName);
         return await openDatabase(
           path,
-          version:4,
+          version: 8, // Incremented version to trigger upgrade
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
         ); 
@@ -32,6 +32,7 @@ class DbHelper{
     }
 
     Future _onCreate(Database db, int version) async{
+        // Buat tabel users
         await db.execute('''
           CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -41,8 +42,11 @@ class DbHelper{
             password VARCHAR(255) NOT NULL,
             phone VARCHAR(20) NOT NULL,
             address TEXT
-          );
+          )
+        ''');
 
+        // Buat tabel transactions
+        await db.execute('''
           CREATE TABLE transactions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             transaction_id VARCHAR(50) UNIQUE NOT NULL,
@@ -57,20 +61,87 @@ class DbHelper{
             prescription_number VARCHAR(100),
             prescription_image_path TEXT,
             additional_notes TEXT,
+            status VARCHAR(20) NOT NULL DEFAULT 'selesai',
             purchase_date DATETIME NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-          );
-
+          )
         ''');
+        
+        print('Database tables created successfully');
     }
 
     Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-      if (oldVersion < 4) { 
-        await db.execute('DROP TABLE IF EXISTS users');
+      print('Database upgrade from version $oldVersion to $newVersion');
+      
+      // Selalu drop dan buat ulang untuk memastikan structure yang benar
+      try {
         await db.execute('DROP TABLE IF EXISTS transactions');
-        await _onCreate(db, newVersion);
+        print('Dropped transactions table');
+      } catch (e) {
+        print('Error dropping transactions table: $e');
       }
+      
+      try {
+        await db.execute('DROP TABLE IF EXISTS users');
+        print('Dropped users table');
+      } catch (e) {
+        print('Error dropping users table: $e');
+      }
+      
+      // Buat ulang semua tabel
+      await _onCreate(db, newVersion);
+      print('Database upgrade completed successfully');
+    }
+
+    // Method untuk debug database
+    Future<List<String>> getTableNames() async {
+      final db = await database;
+      final List<Map<String, dynamic>> tables = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+      );
+      return tables.map((table) => table['name'].toString()).toList();
+    }
+
+    // Method untuk mendapatkan schema tabel
+    Future<List<Map<String, dynamic>>> getTableSchema(String tableName) async {
+      final db = await database;
+      return await db.rawQuery("PRAGMA table_info($tableName)");
+    }
+
+    // Method untuk memverifikasi tabel transactions
+    Future<bool> verifyTransactionsTable() async {
+      try {
+        final db = await database;
+        final tableExists = await db.rawQuery(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='transactions'"
+        );
+        
+        if (tableExists.isNotEmpty) {
+          final schema = await getTableSchema('transactions');
+          print('Transactions table schema: $schema');
+          return true;
+        }
+        return false;
+      } catch (e) {
+        print('Error verifying transactions table: $e');
+        return false;
+      }
+    }
+
+    // Method untuk clear semua data (untuk testing)
+    Future<void> clearDatabase() async {
+      final db = await database;
+      await db.execute('DELETE FROM users');
+      await db.execute('DELETE FROM transactions');
+    }
+
+    // Method untuk delete database file (force recreate)
+    Future<void> deleteDatabase() async {
+      final dbPath = await getDatabasesPath();
+      final path = join(dbPath, dbName);
+      await databaseFactory.deleteDatabase(path);
+      _database = null;
     }
 
     

@@ -15,6 +15,7 @@ class Transaction {
   final String? prescriptionImagePath;
   final String? additionalNotes;
   final DateTime purchaseDate;
+  final String? status; // 'selesai' or 'dibatalkan'
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -33,6 +34,7 @@ class Transaction {
     this.prescriptionImagePath,
     this.additionalNotes,
     required this.purchaseDate,
+    this.status = 'selesai',
     this.createdAt,
     this.updatedAt,
   });
@@ -54,6 +56,7 @@ class Transaction {
       prescriptionImagePath: map['prescription_image_path'],
       additionalNotes: map['additional_notes'],
       purchaseDate: DateTime.parse(map['purchase_date']),
+      status: map['status'] ?? 'selesai',
       createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
       updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
     );
@@ -76,6 +79,7 @@ class Transaction {
       'prescription_image_path': prescriptionImagePath,
       'additional_notes': additionalNotes,
       'purchase_date': purchaseDate.toIso8601String(),
+      'status': status,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };
@@ -121,6 +125,7 @@ class Transaction {
     String? prescriptionImagePath,
     String? additionalNotes,
     DateTime? purchaseDate,
+    String? status,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -139,6 +144,7 @@ class Transaction {
       prescriptionImagePath: prescriptionImagePath ?? this.prescriptionImagePath,
       additionalNotes: additionalNotes ?? this.additionalNotes,
       purchaseDate: purchaseDate ?? this.purchaseDate,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

@@ -45,5 +45,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- Camera and Photo Library permissions -->
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to camera to take pictures of prescriptions</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photo library to select prescription images</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs access to save prescription images to photo library</string>
 </dict>
 </plist>

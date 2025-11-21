@@ -8,9 +8,47 @@ class TransactionRepository {
   // Insert transaksi baru
   Future<int> insertTransaction(Transaction transaction) async {
     try {
+      // Pastikan database sudah siap
       final db = await _dbHelper.database;
-      return await db.insert(tableName, transaction.toMapForInsert());
+      
+      // Verify transactions table exists dengan cara yang lebih robust
+      try {
+        final tableCheck = await db.rawQuery(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='transactions'"
+        );
+        
+        if (tableCheck.isEmpty) {
+          print('Transactions table not found, forcing database recreation...');
+          throw Exception('Table not found');
+        }
+        
+        print('Transactions table exists, proceeding with insert');
+        final result = await db.insert(tableName, transaction.toMapForInsert());
+        print('Transaction inserted successfully with ID: $result');
+        return result;
+      } catch (e) {
+        print('Error during table verification or insert: $e');
+        print('Attempting database recreation...');
+        
+        // Force database recreation
+        await _dbHelper.deleteDatabase();
+        final newDb = await _dbHelper.database;
+        
+        // Verify table was created
+        final verifyTableCheck = await newDb.rawQuery(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='transactions'"
+        );
+        
+        if (verifyTableCheck.isEmpty) {
+          throw Exception('Failed to create transactions table after database recreation');
+        }
+        
+        final result = await newDb.insert(tableName, transaction.toMapForInsert());
+        print('Transaction inserted after database recreation with ID: $result');
+        return result;
+      }
     } catch (e) {
+      print('Final error in insertTransaction: $e');
       throw Exception('Failed to insert transaction: $e');
     }
   }
@@ -171,6 +209,40 @@ class TransactionRepository {
       );
     } catch (e) {
       throw Exception('Failed to delete transaction by transaction_id: $e');
+    }
+  }
+
+  // Update status transaksi menjadi 'dibatalkan'
+  Future<int> cancelTransaction(String transactionId) async {
+    try {
+      final db = await _dbHelper.database;
+      return await db.update(
+        tableName,
+        {
+          'status': 'dibatalkan',
+          'updated_at': DateTime.now().toIso8601String(),
+        },
+        where: 'transaction_id = ?',
+        whereArgs: [transactionId],
+      );
+    } catch (e) {
+      throw Exception('Failed to cancel transaction: $e');
+    }
+  }
+
+  // Get transaksi berdasarkan status
+  Future<List<Transaction>> getTransactionsByStatus(String status) async {
+    try {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        where: 'status = ?',
+        whereArgs: [status],
+        orderBy: 'purchase_date DESC',
+      );
+      return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
+    } catch (e) {
+      throw Exception('Failed to get transactions by status: $e');
     }
   }
 
