@@ -32,7 +32,20 @@ class DbHelper{
     }
 
     Future _onCreate(Database db, int version) async{
-        
+        await db.execute('''
+          CREATE TABLE users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            fullname VARCHAR(255) NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            phone VARCHAR(20) NOT NULL
+          );
+
+           
+
+
+        ''');
     }
 
     Future _onUpgrade(Database db, int oldVersion, int newVersion) async {

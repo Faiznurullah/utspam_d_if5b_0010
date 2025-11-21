@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'profile_page.dart';
 import 'transaction_history_page.dart';
+import 'product_page.dart';
+import '../data/model/product.dart';
+import '../widget/card_product.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +14,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+  List<Product> products = [
+    Product(
+      id: 1,
+      name: "Vitamin C",
+      description: "Boosts immune system",
+      price: 15.99,
+      imageUrl: "assets/images/medicine1.png",
+    ),
+    Product(
+      id: 2,
+      name: "Bodrex Herbal",
+      description: "Relieves headaches",
+      price: 7.99,
+      imageUrl: "assets/images/medicine2.png",
+    ),
+    Product(
+      id: 3,
+      name: "Konidin",
+      description: "Cough relief",
+      price: 5.99,
+      imageUrl: "assets/images/medicine3.png",
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,9 +124,17 @@ class _HomePageState extends State<HomePage> {
                       'Product for You',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      'See All',
-                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ProductPage()),
+                        );
+                      },
+                      child: Text(
+                        'See All',
+                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                      ),
                     ),
                   ],
                 ),
@@ -109,24 +146,13 @@ class _HomePageState extends State<HomePage> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      productCard(
-                        name: "Vitamin C",
-                        type: "vitamins",
-                        price: "\$15.99",
-                        image: "assets/images/medicine1.png",
-                      ),
-                      productCard(
-                        name: "Bodrex Herbal",
-                        type: "Antibiotics",
-                        price: "\$7.99",
-                        image: "assets/images/medicine2.png",
-                      ),
-                      productCard(
-                        name: "Konidin",
-                        type: "Cough Medicine",
-                        price: "\$5.99",
-                        image: "assets/images/medicine3.png",
-                      ),
+                      for (var product in products)
+                        productCard(
+                          name: product.name,
+                          type: product.description,
+                          price: '\$${product.price.toStringAsFixed(2)}',
+                          image: product.imageUrl,
+                        ),
                     ],
                   ),
                 ),
@@ -193,60 +219,3 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget productCard({
-  required String name,
-  required String type,
-  required String price,
-  required String image,
-}) {
-  return Container(
-    width: 150,
-    margin: const EdgeInsets.only(right: 12),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 8,
-          offset: const Offset(0, 3),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.asset(image, height: 70),
-
-        const SizedBox(height: 12),
-
-        Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-
-        Text(type, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-
-        const SizedBox(height: 8),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              price,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-
-            Container(
-              height: 28,
-              width: 28,
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.add, color: Colors.white, size: 18),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
