@@ -3,6 +3,7 @@ import 'dart:convert';
 class Transaction {
   final int? id;
   final String transactionId;
+  final int userId;  
   final String buyerName;
   final int drugId;
   final String drugName;
@@ -10,7 +11,7 @@ class Transaction {
   final double drugPrice;
   final int quantity;
   final double totalCost;
-  final String purchaseMethod; // 'langsung' or 'resep_dokter'
+  final String purchaseMethod;  
   final String? prescriptionNumber;
   final String? prescriptionImagePath;
   final String? additionalNotes;
@@ -22,6 +23,7 @@ class Transaction {
   Transaction({
     this.id,
     required this.transactionId,
+    required this.userId,
     required this.buyerName,
     required this.drugId,
     required this.drugName,
@@ -38,12 +40,12 @@ class Transaction {
     this.createdAt,
     this.updatedAt,
   });
-
-  // Factory constructor untuk membuat instance dari Map (database)
+ 
   factory Transaction.fromMap(Map<String, dynamic> map) {
     return Transaction(
       id: map['id'],
       transactionId: map['transaction_id'],
+      userId: map['user_id'],
       buyerName: map['buyer_name'],
       drugId: map['drug_id'],
       drugName: map['drug_name'],
@@ -67,6 +69,7 @@ class Transaction {
     return {
       'id': id,
       'transaction_id': transactionId,
+      'user_id': userId,
       'buyer_name': buyerName,
       'drug_id': drugId,
       'drug_name': drugName,
@@ -113,6 +116,7 @@ class Transaction {
   Transaction copyWith({
     int? id,
     String? transactionId,
+    int? userId,
     String? buyerName,
     int? drugId,
     String? drugName,
@@ -132,6 +136,7 @@ class Transaction {
     return Transaction(
       id: id ?? this.id,
       transactionId: transactionId ?? this.transactionId,
+      userId: userId ?? this.userId,
       buyerName: buyerName ?? this.buyerName,
       drugId: drugId ?? this.drugId,
       drugName: drugName ?? this.drugName,

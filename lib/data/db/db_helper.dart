@@ -24,15 +24,14 @@ class DbHelper{
         final path = join(dbPath, dbName);
         return await openDatabase(
           path,
-          version: 8, // Incremented version to trigger upgrade
+          version: 9, 
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
         ); 
       
     }
 
-    Future _onCreate(Database db, int version) async{
-        // Buat tabel users
+    Future _onCreate(Database db, int version) async{ 
         await db.execute('''
           CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -50,6 +49,7 @@ class DbHelper{
           CREATE TABLE transactions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             transaction_id VARCHAR(50) UNIQUE NOT NULL,
+            user_id INTEGER NOT NULL,
             buyer_name VARCHAR(255) NOT NULL,
             drug_id INTEGER NOT NULL,
             drug_name VARCHAR(255) NOT NULL,
@@ -64,7 +64,8 @@ class DbHelper{
             status VARCHAR(20) NOT NULL DEFAULT 'selesai',
             purchase_date DATETIME NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
           )
         ''');
         
@@ -129,14 +130,13 @@ class DbHelper{
       }
     }
 
-    // Method untuk clear semua data (untuk testing)
+    
     Future<void> clearDatabase() async {
       final db = await database;
       await db.execute('DELETE FROM users');
       await db.execute('DELETE FROM transactions');
     }
-
-    // Method untuk delete database file (force recreate)
+ 
     Future<void> deleteDatabase() async {
       final dbPath = await getDatabasesPath();
       final path = join(dbPath, dbName);

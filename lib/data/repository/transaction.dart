@@ -52,8 +52,56 @@ class TransactionRepository {
       throw Exception('Failed to insert transaction: $e');
     }
   }
+  
 
-  // Get semua transaksi
+
+
+
+
+
+  Future<List<Transaction>> getTransactionsByUserId(int userId) async {
+    try {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'purchase_date DESC',
+      );
+      return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
+    } catch (e) {
+      throw Exception('Failed to get transactions by user ID: $e');
+    }
+  } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Future<List<Transaction>> getRecentTransactionsByUserId(int userId, {int limit = 3}) async {
+    try {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'purchase_date DESC',
+        limit: limit,
+      );
+      return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
+    } catch (e) {
+      throw Exception('Failed to get recent transactions by user ID: $e');
+    }
+  } 
   Future<List<Transaction>> getAllTransactions() async {
     try {
       final db = await _dbHelper.database;
@@ -84,9 +132,7 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to get transaction by id: $e');
     }
-  }
-
-  // Get transaksi berdasarkan transaction_id
+  } 
   Future<Transaction?> getTransactionByTransactionId(String transactionId) async {
     try {
       final db = await _dbHelper.database;
@@ -103,9 +149,7 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to get transaction by transaction_id: $e');
     }
-  }
-
-  // Get transaksi berdasarkan nama pembeli
+  } 
   Future<List<Transaction>> getTransactionsByBuyerName(String buyerName) async {
     try {
       final db = await _dbHelper.database;
@@ -119,9 +163,7 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to get transactions by buyer name: $e');
     }
-  }
-
-  // Get transaksi berdasarkan obat
+  } 
   Future<List<Transaction>> getTransactionsByDrugName(String drugName) async {
     try {
       final db = await _dbHelper.database;
@@ -135,9 +177,7 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to get transactions by drug name: $e');
     }
-  }
-
-  // Get transaksi berdasarkan metode pembelian
+  } 
   Future<List<Transaction>> getTransactionsByPurchaseMethod(String purchaseMethod) async {
     try {
       final db = await _dbHelper.database;
@@ -151,9 +191,10 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to get transactions by purchase method: $e');
     }
-  }
+  } 
 
-  // Get transaksi berdasarkan tanggal
+
+
   Future<List<Transaction>> getTransactionsByDateRange(DateTime startDate, DateTime endDate) async {
     try {
       final db = await _dbHelper.database;
@@ -167,9 +208,7 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to get transactions by date range: $e');
     }
-  }
-
-  // Update transaksi
+  } 
   Future<int> updateTransaction(Transaction transaction) async {
     try {
       final db = await _dbHelper.database;
@@ -210,9 +249,13 @@ class TransactionRepository {
     } catch (e) {
       throw Exception('Failed to delete transaction by transaction_id: $e');
     }
-  }
+  } 
 
-  // Update status transaksi menjadi 'dibatalkan'
+
+
+
+
+  
   Future<int> cancelTransaction(String transactionId) async {
     try {
       final db = await _dbHelper.database;

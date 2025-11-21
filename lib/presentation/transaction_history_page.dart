@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../data/repository/transaction.dart';
 import '../data/model/transaction.dart';
+import '../data/model/user.dart';
 import 'transaction_edit_page.dart';
 import 'transaction_detail_page.dart';
 
 class TransactionHistoryPage extends StatefulWidget {
-  const TransactionHistoryPage({super.key});
+  final User? currentUser;
+  
+  const TransactionHistoryPage({super.key, this.currentUser});
 
   @override
   State<TransactionHistoryPage> createState() => _TransactionHistoryPageState();
@@ -30,12 +33,19 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
         _error = null;
       });
       
-      final transactions = await _transactionRepository.getAllTransactions();
-      
-      setState(() {
-        _transactions = transactions;
-        _isLoading = false;
-      });
+      if (widget.currentUser != null) {
+        final transactions = await _transactionRepository.getTransactionsByUserId(widget.currentUser!.id!);
+        
+        setState(() {
+          _transactions = transactions;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _transactions = [];
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       setState(() {
         _error = e.toString();

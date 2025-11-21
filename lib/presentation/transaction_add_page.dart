@@ -6,14 +6,16 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../data/model/product.dart';
 import '../data/model/transaction.dart';
+import '../data/model/user.dart';
 import '../data/repository/transaction.dart';
 import '../data/db/db_helper.dart';
 import 'transaction_history_page.dart';
 
 class TransactionAddPage extends StatefulWidget {
   final Product? selectedProduct;
+  final User? currentUser;
   
-  const TransactionAddPage({super.key, this.selectedProduct});
+  const TransactionAddPage({super.key, this.selectedProduct, this.currentUser});
 
   @override
   State<TransactionAddPage> createState() => _TransactionAddPageState();
@@ -365,6 +367,11 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
       return;
     }
 
+    if (widget.currentUser == null) {
+      _showSnackBar('User tidak ditemukan. Silakan login kembali.', isError: true);
+      return;
+    }
+
     if (_purchaseMethod == 'resep_dokter' && _prescriptionImagePath == null && _prescriptionImageFile == null) {
       _showSnackBar('Foto resep dokter wajib diupload', isError: true);
       return;
@@ -379,14 +386,12 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
       final dbHelper = DbHelper.instance;
       final tables = await dbHelper.getTableNames();
       final transactionTableExists = await dbHelper.verifyTransactionsTable();
-      print('Available tables before transaction: $tables');
-      print('Transactions table verified: $transactionTableExists');
       
       if (!transactionTableExists) {
-        print('Transactions table not found, forcing recreation...');
+       
         await dbHelper.deleteDatabase();
         final newTables = await dbHelper.getTableNames(); // This will recreate the database
-        print('Tables after recreation: $newTables');
+        
       }
       
       final transactionId = _transactionRepository.generateTransactionId();
@@ -394,6 +399,7 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
       
       final transaction = Transaction(
         transactionId: transactionId,
+        userId: widget.currentUser!.id!,
         buyerName: _buyerNameController.text.trim(),
         drugId: _selectedProduct!.id,
         drugName: _selectedProduct!.name,
@@ -414,8 +420,7 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
 
       await _transactionRepository.insertTransaction(transaction);
 
-      // log result
-      print('Transaction saved: $transaction');
+     
       
       if (mounted) {
         _showSnackBar('Transaksi berhasil disimpan!');
@@ -423,7 +428,7 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
         // Navigate to transaction history and remove all previous routes
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const TransactionHistoryPage()),
+          MaterialPageRoute(builder: (context) => TransactionHistoryPage(currentUser: widget.currentUser)),
           (route) => false,
         );
       }
