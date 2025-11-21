@@ -3,6 +3,7 @@ import 'transaction_history_page.dart';
 import 'profile_edit_page.dart';
 import '../data/model/user.dart';
 import '../data/repository/user.dart';
+import 'login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final User? currentUser;
@@ -239,7 +240,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(color: Colors.red),
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    onTap: () {},
+                    onTap: () {
+                       Navigator.pushAndRemoveUntil(
+                         context,
+                         MaterialPageRoute(builder: (context) => LoginPage()),
+                         (route) => false,
+                       );
+                    },
                   ),
                 ],
               ),
