@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/repository/transaction.dart';
 import '../data/model/transaction.dart';
 import 'transaction_edit_page.dart';
+import 'transaction_detail_page.dart';
 
 class TransactionHistoryPage extends StatefulWidget {
   const TransactionHistoryPage({super.key});
@@ -216,6 +217,31 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                           ),
                         ),
                       ),
+                      // Status indicator
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: (transaction.status?.toLowerCase() == 'dibatalkan')
+                              ? Colors.red[100]
+                              : Colors.green[100],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          (transaction.status?.toLowerCase() == 'dibatalkan')
+                              ? 'Dibatalkan'
+                              : 'Selesai',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: (transaction.status?.toLowerCase() == 'dibatalkan')
+                                ? Colors.red[700]
+                                : Colors.green[700],
+                          ),
+                        ),
+                      ),
                       Row(
                         children: [
                           Text(
@@ -228,6 +254,47 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                           const SizedBox(width: 8),
                           GestureDetector(
                             onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TransactionDetailPage(
+                                    transaction: transaction,
+                                  ),
+                                ),
+                              );
+                              
+                              // Refresh data jika ada perubahan
+                              if (result == true) {
+                                _refreshTransactions();
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Icon(
+                                Icons.visibility,
+                                size: 16,
+                                color: Colors.blue[700],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () async {
+                              // Cek status transaksi untuk edit
+                              if (transaction.status?.toLowerCase() == 'dibatalkan') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Transaksi yang dibatalkan tidak dapat diedit'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                                return;
+                              }
+                              
                               final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -245,13 +312,17 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: Colors.green[100],
+                                color: transaction.status?.toLowerCase() == 'dibatalkan' 
+                                    ? Colors.grey[200]
+                                    : Colors.green[100],
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Icon(
                                 Icons.edit,
                                 size: 16,
-                                color: Colors.green[700],
+                                color: transaction.status?.toLowerCase() == 'dibatalkan'
+                                    ? Colors.grey[500]
+                                    : Colors.green[700],
                               ),
                             ),
                           ),

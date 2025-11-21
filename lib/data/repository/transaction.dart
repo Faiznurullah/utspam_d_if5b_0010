@@ -212,6 +212,40 @@ class TransactionRepository {
     }
   }
 
+  // Update status transaksi menjadi 'dibatalkan'
+  Future<int> cancelTransaction(String transactionId) async {
+    try {
+      final db = await _dbHelper.database;
+      return await db.update(
+        tableName,
+        {
+          'status': 'dibatalkan',
+          'updated_at': DateTime.now().toIso8601String(),
+        },
+        where: 'transaction_id = ?',
+        whereArgs: [transactionId],
+      );
+    } catch (e) {
+      throw Exception('Failed to cancel transaction: $e');
+    }
+  }
+
+  // Get transaksi berdasarkan status
+  Future<List<Transaction>> getTransactionsByStatus(String status) async {
+    try {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        where: 'status = ?',
+        whereArgs: [status],
+        orderBy: 'purchase_date DESC',
+      );
+      return List.generate(maps.length, (i) => Transaction.fromMap(maps[i]));
+    } catch (e) {
+      throw Exception('Failed to get transactions by status: $e');
+    }
+  }
+
   // Get total penjualan
   Future<double> getTotalSales() async {
     try {

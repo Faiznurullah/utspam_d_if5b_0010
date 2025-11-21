@@ -24,7 +24,7 @@ class DbHelper{
         final path = join(dbPath, dbName);
         return await openDatabase(
           path,
-          version: 7, // Incremented version to trigger upgrade
+          version: 8, // Incremented version to trigger upgrade
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
         ); 
@@ -61,6 +61,7 @@ class DbHelper{
             prescription_number VARCHAR(100),
             prescription_image_path TEXT,
             additional_notes TEXT,
+            status VARCHAR(20) NOT NULL DEFAULT 'selesai',
             purchase_date DATETIME NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP

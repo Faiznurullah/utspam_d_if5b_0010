@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'profile_page.dart';
 import 'transaction_history_page.dart';
+import 'transaction_detail_page.dart';
 import 'product_page.dart';
 import '../data/model/product.dart';
 import '../data/model/transaction.dart';
@@ -242,6 +243,16 @@ class _HomePageState extends State<HomePage> {
                                   horizontal: 16,
                                   vertical: 8,
                                 ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TransactionDetailPage(
+                                        transaction: transaction,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 leading: Container(
                                   width: 40,
                                   height: 40,
