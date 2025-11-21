@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                         productCard(
                           name: product.name,
                           type: product.description,
-                          price: '\$${product.price.toStringAsFixed(2)}',
+                          price: '\Rp.${product.price.toStringAsFixed(2)}',
                           image: product.imageUrl,
                         ),
                     ],

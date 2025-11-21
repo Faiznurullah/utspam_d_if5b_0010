@@ -42,16 +42,31 @@ class DbHelper{
             phone VARCHAR(20) NOT NULL
           );
 
-          
-           
-
+          CREATE TABLE transactions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            transaction_id VARCHAR(50) UNIQUE NOT NULL,
+            buyer_name VARCHAR(255) NOT NULL,
+            drug_id INTEGER NOT NULL,
+            drug_name VARCHAR(255) NOT NULL,
+            drug_category VARCHAR(100) NOT NULL,
+            drug_price REAL NOT NULL,
+            quantity INTEGER NOT NULL,
+            total_cost REAL NOT NULL,
+            purchase_method VARCHAR(50) NOT NULL DEFAULT 'langsung',
+            prescription_number VARCHAR(100),
+            prescription_image_path TEXT,
+            additional_notes TEXT,
+            purchase_date DATETIME NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+          );
 
         ''');
     }
 
     Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
       if (oldVersion < 3) { 
-        await db.execute('DROP TABLE IF EXISTS items');
+        await db.execute('DROP TABLE IF EXISTS users');
         await db.execute('DROP TABLE IF EXISTS transactions');
         await _onCreate(db, newVersion);
       }
