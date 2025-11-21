@@ -4,6 +4,8 @@ import 'profile_page.dart';
 import 'transaction_history_page.dart';
 import 'product_page.dart';
 import '../data/model/product.dart';
+import '../data/model/transaction.dart';
+import '../data/repository/transaction.dart';
 import '../widget/card_product.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +16,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TransactionRepository _transactionRepository = TransactionRepository();
+  List<Transaction> _recentTransactions = [];
+  bool _isLoadingTransactions = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecentTransactions();
+  }
+
+  Future<void> _loadRecentTransactions() async {
+    setState(() {
+      _isLoadingTransactions = true;
+    });
+
+    try {
+      final allTransactions = await _transactionRepository.getAllTransactions();
+      setState(() {
+        _recentTransactions = allTransactions.take(3).toList();
+        _isLoadingTransactions = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoadingTransactions = false;
+      });
+      print('Error loading transactions: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,31 +190,109 @@ class _HomePageState extends State<HomePage> {
 
               SizedBox(height: 10),
 
-              Column(
-                children: [
-                  ListTile(
-                    tileColor: Colors.white,
-                    leading: Image.asset('assets/images/medicine1.png', height: 40),
-                    title: Text('Vitamin C'),
-                    subtitle: Text('Purchased on 12 Jan 2024'),
-                    trailing: Text('\$15.99'),
-                  ),
-                  ListTile(
-                    tileColor: Colors.white,
-                    leading: Image.asset('assets/images/medicine2.png', height: 40),
-                    title: Text('Bodrex Herbal'),
-                    subtitle: Text('Purchased on 10 Jan 2024'),
-                    trailing: Text('\$7.99'),
-                  ),
-                  ListTile(
-                    tileColor: Colors.white,
-                    leading: Image.asset('assets/images/medicine3.png', height: 40),
-                    title: Text('Konidin'),
-                    subtitle: Text('Purchased on 08 Jan 2024'),
-                    trailing: Text('\$5.99'),
-                  ),
-                ],
-              ),
+              _isLoadingTransactions
+                  ? Container(
+                      height: 200,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blue[600],
+                        ),
+                      ),
+                    )
+                  : _recentTransactions.isEmpty
+                      ? Container(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.receipt_long,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Belum ada transaksi',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                'Transaksi akan muncul di sini setelah Anda melakukan pembelian',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Column(
+                          children: _recentTransactions.map((transaction) {
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 8),
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ListTile(
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                leading: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[100],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.medication,
+                                    color: Colors.blue[700],
+                                    size: 24,
+                                  ),
+                                ),
+                                title: Text(
+                                  transaction.drugName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Purchased on ${_formatDate(transaction.purchaseDate)}',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    Text(
+                                      '${transaction.quantity} items • ${transaction.buyerName}',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Text(
+                                  transaction.formattedTotalCost,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green[700],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
         
         
               ],
@@ -193,6 +301,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 }
 
