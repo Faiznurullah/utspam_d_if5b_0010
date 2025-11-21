@@ -249,7 +249,6 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
       final String savedPath = path.join(prescriptionDir.path, fileName);
       
       // Copy file to app directory
-      final File savedFile = File(savedPath);
       await File(pickedFile.path).copy(savedPath);
       
       return savedPath;

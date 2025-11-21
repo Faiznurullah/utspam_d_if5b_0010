@@ -120,7 +120,6 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isCompleted = _currentTransaction.status?.toLowerCase() == 'selesai' || _currentTransaction.status == null;
     final bool isCancelled = _currentTransaction.status?.toLowerCase() == 'dibatalkan';
 
     return Scaffold(

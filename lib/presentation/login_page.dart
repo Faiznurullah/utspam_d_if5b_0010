@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
           // Navigate ke HomePage dan hapus semua halaman sebelumnya
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => HomePage(currentUser: user)),
             (route) => false,
           );
         }
