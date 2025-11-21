@@ -4,6 +4,7 @@ import 'dart:io';
 import '../data/model/product.dart';
 import '../data/model/transaction.dart';
 import '../data/repository/transaction.dart';
+import '../data/db/db_helper.dart';
 import 'transaction_history_page.dart';
 
 class TransactionAddPage extends StatefulWidget {
@@ -140,6 +141,20 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
     });
 
     try {
+      // Debug: Check database tables first
+      final dbHelper = DbHelper.instance;
+      final tables = await dbHelper.getTableNames();
+      final transactionTableExists = await dbHelper.verifyTransactionsTable();
+      print('Available tables before transaction: $tables');
+      print('Transactions table verified: $transactionTableExists');
+      
+      if (!transactionTableExists) {
+        print('Transactions table not found, forcing recreation...');
+        await dbHelper.deleteDatabase();
+        final newTables = await dbHelper.getTableNames(); // This will recreate the database
+        print('Tables after recreation: $newTables');
+      }
+      
       final transactionId = _transactionRepository.generateTransactionId();
       final now = DateTime.now();
       
@@ -191,16 +206,6 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
     }
   }
 
-  void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,6 +214,75 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
         backgroundColor: Colors.blue[600],
         foregroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          // Debug button untuk check tables
+          IconButton(
+            icon: const Icon(Icons.bug_report),
+            onPressed: () async {
+              final dbHelper = DbHelper.instance;
+              try {
+                final tables = await dbHelper.getTableNames();
+                final transactionTableExists = await dbHelper.verifyTransactionsTable();
+                print('Available tables: $tables');
+                print('Transactions table exists: $transactionTableExists');
+                _showSnackBar('Tables: ${tables.join(', ')}. Transactions: $transactionTableExists');
+              } catch (e) {
+                _showSnackBar('Database error: $e', isError: true);
+              }
+            },
+          ),
+          // Reset database button
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () async {
+              final dbHelper = DbHelper.instance;
+              try {
+                await dbHelper.deleteDatabase();
+                final tables = await dbHelper.getTableNames();
+                _showSnackBar('Database recreated. Tables: ${tables.join(', ')}');
+              } catch (e) {
+                _showSnackBar('Failed to recreate: $e', isError: true);
+              }
+            },
+          ),
+          // Force delete database button  
+          IconButton(
+            icon: const Icon(Icons.delete_forever),
+            onPressed: () async {
+              // Show confirmation dialog
+              bool? confirm = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Reset Database'),
+                    content: const Text('Hapus database dan buat ulang? Ini akan mengatasi error table.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Batal'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('Reset'),
+                      ),
+                    ],
+                  );
+                },
+              );
+              
+              if (confirm == true) {
+                final dbHelper = DbHelper.instance;
+                try {
+                  await dbHelper.deleteDatabase();
+                  final tables = await dbHelper.getTableNames();
+                  _showSnackBar('Database reset berhasil! Tables: ${tables.join(', ')}');
+                } catch (e) {
+                  _showSnackBar('Failed to reset: $e', isError: true);
+                }
+              }
+            },
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -564,6 +638,16 @@ class _TransactionAddPageState extends State<TransactionAddPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+        duration: const Duration(seconds: 3),
       ),
     );
   }
