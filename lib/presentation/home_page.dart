@@ -127,6 +127,8 @@ class _HomePageState extends State<HomePage> {
                           type: product.description,
                           price: '\Rp.${product.price.toStringAsFixed(2)}',
                           image: product.imageUrl,
+                          product: product,
+                          context: context,
                         ),
                     ],
                   ),
