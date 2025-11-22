@@ -54,15 +54,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
                Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
+                padding: const EdgeInsets.all(20), 
                 child: Image.asset(
                   'assets/images/icon_herbal.png',
-                  width: 150,
-                  height: 150,
+                  width: 250,
+                  height: 250,
                 ),
               ), 
             ],
