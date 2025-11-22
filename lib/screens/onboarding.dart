@@ -44,7 +44,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           builder: (context, constraints) {
             return Stack(
               children: [
-                // Area untuk gambar - 75% dari tinggi SafeArea
+                
+                
+
+                
                 Positioned(
                   top: 0,
                   left: 0,
@@ -64,9 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       );
                     },
                   ),
-                ),
-
-                // Bagian bawah dengan card putih - 45% dari tinggi SafeArea
+                ), 
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -188,7 +189,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// Widget untuk konten onboarding
+
+
 class OnboardingContent extends StatelessWidget {
   final OnboardingData data;
 
